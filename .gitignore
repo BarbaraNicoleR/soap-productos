@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Variables de entorno
+.env
+.env.local
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Railway
+.railway/   

@@ -1,0 +1,22 @@
+{
+    "name": "soap-productos",
+    "version": "1.0.0",
+    "description": "Servicio SOAP para calcular fechas de productos por vencer",
+    "main": "index.js",
+    "engines": {
+      "node": "18.x"
+    },
+    "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "soap": "^0.45.0",
+      "csv-parse": "^5.5.0"
+
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1"
+    }
+  }
