@@ -51,15 +51,15 @@ function calcularProductos(productos, hoyISO) {
     }
   })
 
-  // Serializar todosConFlag como string JSON para evitar problemas de serialización SOAP
-  const todosConFlag = JSON.stringify(
-    productos.map(p => ({
-      id: p._id,
-      flag: porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
-    }))
-  )
+  // Generar CSV string directamente con id;flag para evitar problemas de serialización SOAP
+  const filas = productos.map(p => {
+    const flag = porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
+    return `${p._id};${flag}`
+  }).join('\n')
 
-  return { porVencer, vencidos, todosConFlag }
+  const todosConFlagCSV = `id;flag\n${filas}`
+
+  return { porVencer, vencidos, todosConFlagCSV }
 }
 
 function normalizarProductos(raw) {
@@ -103,13 +103,13 @@ const serviceObject = {
 
           const resultado = calcularProductos(productos, hoyISO)
 
-          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlag: OK`)
+          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlagCSV generado OK`)
 
           return {
             return: {
               porVencer: resultado.porVencer,
               vencidos: resultado.vencidos,
-              todosConFlag: resultado.todosConFlag
+              todosConFlagCSV: resultado.todosConFlagCSV
             }
           }
         } catch (err) {
