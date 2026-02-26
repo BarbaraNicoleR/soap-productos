@@ -51,11 +51,13 @@ function calcularProductos(productos, hoyISO) {
     }
   })
 
-  // Construir array completo con flag calculado para actualización masiva en BD
-  const todosConFlag = productos.map(p => ({
-    id: p._id,
-    flag: porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
-  }))
+  // Serializar todosConFlag como string JSON para evitar problemas de serialización SOAP
+  const todosConFlag = JSON.stringify(
+    productos.map(p => ({
+      id: p._id,
+      flag: porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
+    }))
+  )
 
   return { porVencer, vencidos, todosConFlag }
 }
@@ -101,9 +103,15 @@ const serviceObject = {
 
           const resultado = calcularProductos(productos, hoyISO)
 
-          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlag: ${resultado.todosConFlag.length}`)
+          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlag: OK`)
 
-          return { return: resultado }
+          return {
+            return: {
+              porVencer: resultado.porVencer,
+              vencidos: resultado.vencidos,
+              todosConFlag: resultado.todosConFlag
+            }
+          }
         } catch (err) {
           console.error('[SOAP] Error:', err.message)
           return { return: JSON.stringify({ error: err.message }) }
