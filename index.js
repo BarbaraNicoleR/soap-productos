@@ -51,36 +51,40 @@ function calcularProductos(productos, hoyISO) {
     }
   })
 
-  return { porVencer, vencidos }
+  // Construir array completo con flag calculado para actualización masiva en BD
+  const todosConFlag = productos.map(p => ({
+    id: p._id,
+    flag: porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
+  }))
+
+  return { porVencer, vencidos, todosConFlag }
 }
 
 function normalizarProductos(raw) {
-    if (Array.isArray(raw)) return raw
-  
-    if (typeof raw === 'string') {
-      // Intentar como JSON primero
-      try {
-        const parsed = JSON.parse(raw)
-        return Array.isArray(parsed) ? parsed : Object.values(parsed)
-      } catch (e) {
-        // Es CSV, parsearlo
-        const rows = parse(raw, {
-          delimiter: ';',
-          columns: true,
-          skip_empty_lines: true
-        })
-        return rows.map(row => ({
-          _id: row._id,
-          customerData: JSON.parse(row.customerData.replace(/""/g, '"')),
-          mbData: JSON.parse(row.mbData.replace(/""/g, '"'))
-        }))
-      }
+  if (Array.isArray(raw)) return raw
+
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw)
+      return Array.isArray(parsed) ? parsed : Object.values(parsed)
+    } catch (e) {
+      const rows = parse(raw, {
+        delimiter: ';',
+        columns: true,
+        skip_empty_lines: true
+      })
+      return rows.map(row => ({
+        _id: row._id,
+        customerData: JSON.parse(row.customerData.replace(/""/g, '"')),
+        mbData: JSON.parse(row.mbData.replace(/""/g, '"'))
+      }))
     }
-  
-    if (typeof raw === 'object' && raw !== null) return Object.values(raw)
-  
-    throw new Error('Formato no reconocido')
   }
+
+  if (typeof raw === 'object' && raw !== null) return Object.values(raw)
+
+  throw new Error('Formato no reconocido')
+}
 
 const serviceObject = {
   ProductosService: {
@@ -97,7 +101,7 @@ const serviceObject = {
 
           const resultado = calcularProductos(productos, hoyISO)
 
-          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length}`)
+          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlag: ${resultado.todosConFlag.length}`)
 
           return { return: resultado }
         } catch (err) {
