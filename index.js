@@ -51,7 +51,7 @@ function calcularProductos(productos, hoyISO) {
     }
   })
 
-  // Generar CSV de flags y encodear en base64 para pasar como stream en MasterBase
+  // Generar CSV de flags y encodear en base64
   const filas = productos.map(p => {
     const flag = porVencer.some(pv => pv._id === p._id) || vencidos.some(v => v._id === p._id)
     return `${p._id};${flag}`
@@ -106,14 +106,15 @@ const serviceObject = {
 
           const resultado = calcularProductos(productos, hoyISO)
 
-          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlagBase64 generado OK`)
+          console.log(`[SOAP] porVencer: ${resultado.porVencer.length} | vencidos: ${resultado.vencidos.length} | todosConFlagBase64: OK`)
 
+          // Retornar TODO como string JSON para evitar problemas de serialización SOAP
           return {
-            return: {
+            return: JSON.stringify({
               porVencer: resultado.porVencer,
               vencidos: resultado.vencidos,
               todosConFlagBase64: resultado.todosConFlagBase64
-            }
+            })
           }
         } catch (err) {
           console.error('[SOAP] Error:', err.message)

@@ -19,7 +19,7 @@
       <xsd:element name="calcularProductosResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="return" type="xsd:anyType"/>
+            <xsd:element name="return" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
