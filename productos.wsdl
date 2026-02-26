@@ -6,7 +6,6 @@
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
   xmlns:tns="http://productos.service/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
   <wsdl:types>
     <xsd:schema targetNamespace="http://productos.service/">
       <xsd:element name="calcularProductos">
@@ -20,27 +19,24 @@
       <xsd:element name="calcularProductosResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="return" type="xsd:string"/>
+            <xsd:element name="return" type="xsd:anyType"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:schema>
   </wsdl:types>
-
   <wsdl:message name="calcularProductosSoapIn">
     <wsdl:part name="parameters" element="tns:calcularProductos"/>
   </wsdl:message>
   <wsdl:message name="calcularProductosSoapOut">
     <wsdl:part name="parameters" element="tns:calcularProductosResponse"/>
   </wsdl:message>
-
   <wsdl:portType name="ProductosPortType">
     <wsdl:operation name="calcularProductos">
       <wsdl:input message="tns:calcularProductosSoapIn"/>
       <wsdl:output message="tns:calcularProductosSoapOut"/>
     </wsdl:operation>
   </wsdl:portType>
-
   <wsdl:binding name="ProductosBinding" type="tns:ProductosPortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="calcularProductos">
@@ -49,11 +45,9 @@
       <wsdl:output><soap:body use="literal"/></wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-
   <wsdl:service name="ProductosService">
     <wsdl:port name="ProductosPort" binding="tns:ProductosBinding">
-      <soap:address location="https://soap-productos-production.up.railway.app/productos"/>
+      <soap:address location="https://soap-productos-production-d084.up.railway.app/productos"/>
     </wsdl:port>
   </wsdl:service>
-
 </wsdl:definitions>
