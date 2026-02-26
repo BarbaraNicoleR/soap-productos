@@ -47,7 +47,7 @@
   </wsdl:binding>
   <wsdl:service name="ProductosService">
     <wsdl:port name="ProductosPort" binding="tns:ProductosBinding">
-      <soap:address location="https://soap-productos-production-d084.up.railway.app/productos"/>
+      <soap:address location="https://soap-productos-production-8b71.up.railway.app/productos"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
